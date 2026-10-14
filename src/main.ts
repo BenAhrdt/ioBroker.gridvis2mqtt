@@ -32,6 +32,8 @@ import { Gridvis2mqttDeviceManagement, type DeviceManagerDevice, type DeviceMana
 const OWNER = 'gridvis2mqtt';
 const DEVICES_ROOT = 'devices';
 const DISCOVERY_SYNC_TIMEOUT_MS = 10_000;
+const DEVICE_ICON_FETCH_TIMEOUT_MS = 5_000;
+const DEVICE_ICON_MAX_BYTES = 512 * 1024;
 const DEVICE_INFO_KEYS = [
 	'name',
 	'manufacturer',
@@ -1674,9 +1676,9 @@ class Gridvis2mqtt extends utils.Adapter {
 		if (!object || !isOwned(object) || object.type !== 'device') {
 			return;
 		}
-		const icon = iconUrlValue(value);
+		const icon = await this.resolveDeviceIcon(iconUrlValue(value));
 		const currentCommon = object.common as ioBroker.DeviceCommon;
-		const currentIcon = iconUrlValue(currentCommon.icon);
+		const currentIcon = typeof currentCommon.icon === 'string' ? currentCommon.icon : undefined;
 		if (currentIcon === icon) {
 			return;
 		}
@@ -1691,6 +1693,37 @@ class Gridvis2mqtt extends utils.Adapter {
 			common,
 			native: object.native ?? {},
 		});
+	}
+
+	private async resolveDeviceIcon(iconUrl: string | undefined): Promise<string | undefined> {
+		if (!iconUrl || iconUrl.startsWith('data:image/')) {
+			return iconUrl;
+		}
+		if (!/^https?:\/\//i.test(iconUrl)) {
+			return iconUrl;
+		}
+		try {
+			const response = await fetch(iconUrl, { signal: AbortSignal.timeout(DEVICE_ICON_FETCH_TIMEOUT_MS) });
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
+			}
+			const contentLength = Number(response.headers.get('content-length'));
+			if (Number.isFinite(contentLength) && contentLength > DEVICE_ICON_MAX_BYTES) {
+				throw new Error(`image exceeds ${DEVICE_ICON_MAX_BYTES} bytes`);
+			}
+			const contentType = response.headers.get('content-type')?.split(';', 1)[0]?.trim();
+			if (!contentType?.startsWith('image/')) {
+				throw new Error(`unexpected content type ${contentType ?? 'unknown'}`);
+			}
+			const data = Buffer.from(await response.arrayBuffer());
+			if (data.length > DEVICE_ICON_MAX_BYTES) {
+				throw new Error(`image exceeds ${DEVICE_ICON_MAX_BYTES} bytes`);
+			}
+			return `data:${contentType};base64,${data.toString('base64')}`;
+		} catch (error) {
+			this.log.debug(`Could not load GridVis device icon ${iconUrl}: ${String(error)}`);
+			return undefined;
+		}
 	}
 
 	private async updateDeviceAvailability(deviceId: string): Promise<void> {

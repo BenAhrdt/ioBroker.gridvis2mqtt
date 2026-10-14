@@ -31,6 +31,8 @@ var import_device_management = require("./device-management");
 const OWNER = "gridvis2mqtt";
 const DEVICES_ROOT = "devices";
 const DISCOVERY_SYNC_TIMEOUT_MS = 1e4;
+const DEVICE_ICON_FETCH_TIMEOUT_MS = 5e3;
+const DEVICE_ICON_MAX_BYTES = 512 * 1024;
 const DEVICE_INFO_KEYS = [
   "name",
   "manufacturer",
@@ -1502,9 +1504,9 @@ class Gridvis2mqtt extends utils.Adapter {
     if (!object || !isOwned(object) || object.type !== "device") {
       return;
     }
-    const icon = iconUrlValue(value);
+    const icon = await this.resolveDeviceIcon(iconUrlValue(value));
     const currentCommon = object.common;
-    const currentIcon = iconUrlValue(currentCommon.icon);
+    const currentIcon = typeof currentCommon.icon === "string" ? currentCommon.icon : void 0;
     if (currentIcon === icon) {
       return;
     }
@@ -1519,6 +1521,37 @@ class Gridvis2mqtt extends utils.Adapter {
       common,
       native: (_a = object.native) != null ? _a : {}
     });
+  }
+  async resolveDeviceIcon(iconUrl) {
+    var _a, _b;
+    if (!iconUrl || iconUrl.startsWith("data:image/")) {
+      return iconUrl;
+    }
+    if (!/^https?:\/\//i.test(iconUrl)) {
+      return iconUrl;
+    }
+    try {
+      const response = await fetch(iconUrl, { signal: AbortSignal.timeout(DEVICE_ICON_FETCH_TIMEOUT_MS) });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const contentLength = Number(response.headers.get("content-length"));
+      if (Number.isFinite(contentLength) && contentLength > DEVICE_ICON_MAX_BYTES) {
+        throw new Error(`image exceeds ${DEVICE_ICON_MAX_BYTES} bytes`);
+      }
+      const contentType = (_b = (_a = response.headers.get("content-type")) == null ? void 0 : _a.split(";", 1)[0]) == null ? void 0 : _b.trim();
+      if (!(contentType == null ? void 0 : contentType.startsWith("image/"))) {
+        throw new Error(`unexpected content type ${contentType != null ? contentType : "unknown"}`);
+      }
+      const data = Buffer.from(await response.arrayBuffer());
+      if (data.length > DEVICE_ICON_MAX_BYTES) {
+        throw new Error(`image exceeds ${DEVICE_ICON_MAX_BYTES} bytes`);
+      }
+      return `data:${contentType};base64,${data.toString("base64")}`;
+    } catch (error) {
+      this.log.debug(`Could not load GridVis device icon ${iconUrl}: ${String(error)}`);
+      return void 0;
+    }
   }
   async updateDeviceAvailability(deviceId) {
     if (!isOwned(await this.getObjectAsync(deviceAvailabilityPath(deviceId)))) {

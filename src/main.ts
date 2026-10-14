@@ -122,6 +122,21 @@ function optionalText(value: unknown): string | undefined {
 	}
 }
 
+function isIconUrlInfo(entityId: string, name: unknown): boolean {
+	return `${entityId}${asString(name)}`
+		.replace(/[^a-z0-9]/gi, '')
+		.toLowerCase()
+		.includes('iconurl');
+}
+
+function iconUrlValue(value: ioBroker.StateValue | undefined): string | undefined {
+	if (typeof value !== 'string') {
+		return undefined;
+	}
+	const text = value.trim();
+	return text || undefined;
+}
+
 function entityCategoryPath(deviceId: string, category: EntityCategory): string {
 	if (category === 'instanceInfo') {
 		return 'info';
@@ -873,10 +888,7 @@ class Gridvis2mqtt extends utils.Adapter {
 				if (category === 'instanceInfo') {
 					continue;
 				}
-				const normalizedInfoName = `${entityRecord.entityId}${asString(entity.config.name)}`
-					.replace(/[^a-z0-9]/gi, '')
-					.toLowerCase();
-				if (category === 'info' && normalizedInfoName.includes('iconurl')) {
+				if (category === 'info' && isIconUrlInfo(entityRecord.entityId, entity.config.name)) {
 					device.iconStateId = entityRecord.valueStateId;
 				}
 				const name =
@@ -1242,6 +1254,7 @@ class Gridvis2mqtt extends utils.Adapter {
 		)) {
 			await this.updateHistoryAvailability(record.deviceId, entityId);
 		}
+		await this.updateDeviceIconFromState(record.deviceId);
 		await this.updateDeviceAvailability(record.deviceId);
 	}
 
@@ -1590,6 +1603,9 @@ class Gridvis2mqtt extends utils.Adapter {
 			if (result.supported && result.value !== undefined) {
 				const value = coerceStateValue(result.value, entity);
 				await this.setStateAsync(runtime.valueStateId, value, true);
+				if (isIconUrlInfo(runtime.entityId, entity.config.name)) {
+					await this.updateDeviceIcon(runtime.deviceId, value);
+				}
 				if (stateTypeFor(entity) === 'mixed') {
 					if (typeof value === 'number') {
 						await this.extendObjectAsync(runtime.valueStateId, {
@@ -1641,6 +1657,42 @@ class Gridvis2mqtt extends utils.Adapter {
 		await this.setStateAsync(aggregateStateId, available, true);
 	}
 
+	private async updateDeviceIconFromState(deviceId: string): Promise<void> {
+		const iconRuntime = [...this.runtimes.values()].find(
+			runtime =>
+				runtime.deviceId === deviceId &&
+				runtime.category === 'info' &&
+				isIconUrlInfo(runtime.entityId, runtime.entity.config.name),
+		);
+		const state = iconRuntime ? await this.getStateAsync(iconRuntime.valueStateId) : undefined;
+		await this.updateDeviceIcon(deviceId, state?.val);
+	}
+
+	private async updateDeviceIcon(deviceId: string, value: ioBroker.StateValue | undefined): Promise<void> {
+		const devicePath = `${DEVICES_ROOT}.${deviceId}`;
+		const object = await this.getObjectAsync(devicePath);
+		if (!object || !isOwned(object) || object.type !== 'device') {
+			return;
+		}
+		const icon = iconUrlValue(value);
+		const currentCommon = object.common as ioBroker.DeviceCommon;
+		const currentIcon = iconUrlValue(currentCommon.icon);
+		if (currentIcon === icon) {
+			return;
+		}
+		const common: ioBroker.DeviceCommon = { ...currentCommon };
+		if (icon) {
+			common.icon = icon;
+		} else {
+			delete common.icon;
+		}
+		await this.setObjectAsync(devicePath, {
+			type: 'device',
+			common,
+			native: object.native ?? {},
+		});
+	}
+
 	private async updateDeviceAvailability(deviceId: string): Promise<void> {
 		if (!isOwned(await this.getObjectAsync(deviceAvailabilityPath(deviceId)))) {
 			return;
@@ -1666,6 +1718,36 @@ class Gridvis2mqtt extends utils.Adapter {
 			}
 		}
 		await this.setStateAsync(deviceAvailabilityPath(deviceId), online, true);
+		await this.updateDevicePresentation(deviceId, online);
+	}
+
+	private async updateDevicePresentation(deviceId: string, online: boolean): Promise<void> {
+		const devicePath = `${DEVICES_ROOT}.${deviceId}`;
+		const object = await this.getObjectAsync(devicePath);
+		if (!object || !isOwned(object) || object.type !== 'device') {
+			return;
+		}
+		const currentCommon = object.common as ioBroker.DeviceCommon;
+		const icon = iconUrlValue(currentCommon.icon);
+		const statusId = `${this.namespace}.${deviceAvailabilityPath(deviceId)}`;
+		const currentStatus = currentCommon.statusStates;
+		const hasOwnStatus =
+			currentStatus?.onlineId === statusId && Object.keys(currentStatus).every(key => key === 'onlineId');
+		const shouldShowStatus = !icon || !online;
+		if (shouldShowStatus === !!currentStatus && (!shouldShowStatus || hasOwnStatus)) {
+			return;
+		}
+		const common: ioBroker.DeviceCommon = { ...currentCommon };
+		if (shouldShowStatus) {
+			common.statusStates = { onlineId: statusId };
+		} else if (hasOwnStatus) {
+			delete common.statusStates;
+		}
+		await this.setObjectAsync(devicePath, {
+			type: 'device',
+			common,
+			native: object.native ?? {},
+		});
 	}
 
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {

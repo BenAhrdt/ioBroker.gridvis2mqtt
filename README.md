@@ -165,8 +165,7 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.1.0 (2026-10-14)
 * (BenAhrdt) update repository-check dependencies and test the adapter on Node.js 26.
 * (BenAhrdt) add GridVis2MQTT Home-Assistant MQTT Discovery receiver
 * (BenAhrdt) simplify MQTT broker configuration to one complete broker URL
@@ -202,6 +201,11 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
 * (BenAhrdt) display Device Manager numeric detail values with two decimal places
 * (BenAhrdt) add persistent virtual Device Manager comparison devices with selectable online and history values
 * (BenAhrdt) show rounded percentage shares for online and grouped comparison history values
+
+### 0.0.1
+
+- Initial implementation of the GridVis2MQTT Home-Assistant MQTT Discovery receiver.
+- The MQTT configuration uses one complete broker URL instead of duplicate URL and host/port fields.
 
 ## License
 MIT License

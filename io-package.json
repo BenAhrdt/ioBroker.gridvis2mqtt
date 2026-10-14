@@ -1,149 +1,162 @@
 {
-	"common": {
-		"name": "gridvis2mqtt",
-		"version": "0.0.1",
-		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"uk": "Початкова версія",
-				"zh-cn": "首次出版"
-			}
-		},
-		"titleLang": {
-			"en": "GridVis2MQTT",
-			"de": "GridVis2MQTT",
-			"ru": "ГридВис2MQTT",
-			"pt": "GridVis2MQTT",
-			"nl": "RasterVis2MQTT",
-			"fr": "GrilleVis2MQTT",
-			"it": "GridVis2MQTT",
-			"es": "GridVis2MQTT",
-			"pl": "GridVis2MQTT",
-			"uk": "GridVis2MQTT",
-			"zh-cn": "GridVis2MQTT"
-		},
-		"desc": {
-			"en": "Receives GridVis2MQTT Home Assistant MQTT discovery messages",
-			"de": "Empfängt Home-Assistant-MQTT-Discovery-Nachrichten von GridVis2MQTT",
-			"ru": "Получает сообщения MQTT Discovery Home Assistant от GridVis2MQTT",
-			"pt": "Recebe mensagens MQTT Discovery do Home Assistant do GridVis2MQTT",
-			"nl": "Ontvangt Home Assistant MQTT-discoveryberichten van GridVis2MQTT",
-			"fr": "Reçoit les messages MQTT Discovery Home Assistant de GridVis2MQTT",
-			"it": "Riceve i messaggi MQTT Discovery di Home Assistant da GridVis2MQTT",
-			"es": "Recibe mensajes MQTT Discovery de Home Assistant de GridVis2MQTT",
-			"pl": "Odbiera komunikaty MQTT Discovery Home Assistant z GridVis2MQTT",
-			"uk": "Отримує повідомлення MQTT Discovery Home Assistant від GridVis2MQTT",
-			"zh-cn": "接收来自 GridVis2MQTT 的 Home Assistant MQTT Discovery 消息"
-		},
-		"authors": [
-			"BenAhrdt <github@ben-schmidt.net>"
-		],
-		"keywords": [
-			"gridvis janitza mqtt"
-		],
-		"licenseInformation": {
-			"type": "free",
-			"license": "MIT"
-		},
-		"platform": "Javascript/Node.js",
-		"icon": "gridvis2mqtt.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/BenAhrdt/ioBroker.gridvis2mqtt/main/admin/gridvis2mqtt.png",
-		"readme": "https://github.com/BenAhrdt/ioBroker.gridvis2mqtt/blob/main/README.md",
-		"loglevel": "info",
-		"tier": 3,
-		"mode": "daemon",
-		"type": "energy",
-		"compact": true,
-		"connectionType": "local",
-		"dataSource": "push",
-		"supportedMessages": {
-			"deviceManager": true
-		},
-		"adminUI": {
-			"config": "json"
-		},
-		"dependencies": [
-			{
-				"js-controller": ">=6.0.11"
-			}
-		],
-	"globalDependencies": [
-		{
-			"admin": ">=8.0.14"
-		}
-	]
-	},
-	"native": {
-		"enabled": true,
-		"brokerUrl": "mqtt://localhost:1883",
-		"username": "",
-		"password": "",
-		"clientId": "",
-		"keepalive": 60,
-		"qos": 0,
-		"discoveryPrefix": "homeassistant",
-		"rejectUnauthorized": true,
-		"ca": "",
-		"cert": "",
-		"key": ""
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.lastError",
-			"type": "state",
-			"common": {
-				"role": "text",
-				"name": "Last error",
-				"type": "string",
-				"read": true,
-				"write": false,
-				"def": ""
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.messagesReceived",
-			"type": "state",
-			"common": {
-				"role": "value",
-				"name": "Messages received",
-				"type": "number",
-				"read": true,
-				"write": false,
-				"def": 0
-			},
-			"native": {}
-		}
-	]
+  "common": {
+    "name": "gridvis2mqtt",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "update repository-check dependencies and test the adapter on Node.js 26.\nadd GridVis2MQTT Home-Assistant MQTT Discovery receiver\nsimplify MQTT broker configuration to one complete broker URL\nshorten GridVis2MQTT device and entity IDs\ngroup online and historical entities below separate object paths\nplace device info discovery entities below the info channel\nrepresent device info values directly as states below the info channel\nstore the normalized discovery payload in the native data of every discovery-created state\nkeep discovery assignments in memory and remove the persistent discovery registry file\naggregate historical period availability on measurement folders and devices\ndebounce the startup discovery synchronization until 10 seconds after the last retained discovery\nuse indicator.reachable for every available state\nplace GridVis2MQTT bridge entities directly below the info channel without online or available states\nreduce repetitive discovery and availability diagnostics to debug logging while retaining warnings and errors\nmap Home-Assistant device classes and state classes to official ioBroker roles, including active/reactive/consumed/produced power and energy roles\nrecognize existing adapter-owned channel markers during updates\nreduce entity states to value and available and keep period names on period channels\nuse folders for the devices root and online/history groups and align entity object types with the requested hierarchy\nshow per-entity reachability and aggregate the online available states for the device connection status\nlink every online entity channel to its own available state via common.statusStates.onlineId\nlink each historical period channel to its own available state via common.statusStates.onlineId\nuse the localized history period names from the discovery payload for period channels\nsynchronize retained discoveries for 10 seconds at startup, preserve existing values, and remove unreferenced objects below devices\nsubscribe availability topics explicitly so retained online/offline payloads update the corresponding available state\ninitialize entities with an availability topic as unavailable until an availability payload is received; the normal state topic no longer overrides this status\nlog availability subscriptions and payload evaluation for MQTT connectivity diagnostics\nevaluate online/offline availability payloads independently from the sensor value template\nintegrate discovered GridVis devices with the ioBroker Device Manager via dm-utils\nuse per-device Discovery icons and keep Device Manager cards compact by moving full information into the details view\nadd persistent Device Manager renaming, fixed-size detail tabs, and chronological history ordering\nadd selectable Device Manager history grouping by measurement or chronology\nshow period headings in chronological Device Manager history\ndisplay Device Manager numeric detail values with two decimal places\nadd persistent virtual Device Manager comparison devices with selectable online and history values\nshow rounded percentage shares for online and grouped comparison history values",
+        "de": "Aktualisiere, prüfe Abhängigkeiten und teste den Adapter auf Node.js 26.\nGridVis2MQTT Home-Assistant MQTT Discovery Receiver hinzufügen\nMQTT-Brokerkonfiguration auf eine komplette Broker-URL vereinfachen\nGridVis2MQTT Geräte- und Entity-IDs kürzen\nGruppiert Online- und Historienobjekte in separaten Objektpfaden\nPlatzieren Sie Geräteinfo-Suchgeräte unter dem Infokanal\nstellt Geräteinfowerte direkt als Status unter dem Infokanal dar\nSpeichert die normalisierte Suchlast in den nativen Daten jedes Discovery-Zustands\nDiscovery-Aufgaben im Speicher behalten und die persistente Discovery-Datei löschen\naggregierte historische Verfügbarkeit auf Messordnern und Geräten\ndie Starterkennung bis 10 Sekunden nach der letzten gespeicherten Erkennung entprellen\nIndicator.Reachable für jeden Staat verwenden\nPlatzieren Sie GridVis2MQTT-Bridge-Entitäten direkt unter dem Infokanal ohne Status\nReduziert wiederholte Erkennungs- und Verfügbarkeitsdiagnosen auf Debug-Logging unter Beibehaltung von Warnungen und Fehlern\nOrdnen Sie Home-Assistant-Geräteklassen und Statusklassen den offiziellen ioBroker-Rollen zu, z. B. aktiv/reaktiv/verbraucht/erzeugte Energie\nbei Updates vorhandene adaptereigene Kanalmarken erkennen\nEntitätsstatus auf Wert und Verfügbarkeit reduzieren und Periodennamen anzeigen\nOrdner für Gerätestamm und Online/Verlauf verwenden und Objekttypen an der gewünschten Hierarchie ausrichten\nErreichbarkeit pro Objekt anzeigen und Online-Status für den Geräteverbindungsstatus aggregieren\nverknüpfe jeden Kanal mit seinem eigenen Status über common.statusStates.OnlineID\nverknüpfe jeden historischen Kanal über common.statusStates.OnlineId mit seinem Status\nVerwenden Sie die Lokalnamen aus der Discovery-Nutzlast für Periodenkanäle\nBeim Start für 10 Sekunden speichern, bestehende Werte beibehalten und unreferenzierte Objekte unter Geräten entfernen\nAbonniere die Verfügbarkeitsthemen explizit, sodass die Online-/Offline-Payloads aktualisiert werden\nEntitäten mit einem Verfügbarkeitsthema als nicht verfügbar initialisieren, bis eine Payload eingeht; das normale Thema überschreibt diesen Status nicht mehr\nLog-Abos und Nutzlastauswertung für MQTT-Verbindungsdiagnosen\nNutzlasten für Online-/Offline-Verfügbarkeit unabhängig von der Sensorwertvorlage\nErkannte GridVis-Geräte per dm-utils in den ioBroker Device Manager integrieren\nDiscovery-Symbole pro Gerät verwenden und alle Daten in der Detailansicht kompakt halten\nDauerhafte Geräte-Manager-Umbenennung, feste Detail-Tabs und Chronologie hinzufügen\nWählbaren Device Manager-Verlauf nach Maß oder Chronologie hinzufügen\nPeriodenüberschriften im Geräte-Manager-Verlauf anzeigen\nzeigt Device Manager-Detailwerte mit zwei Dezimalstellen an\nDauerhafte VM-Vergleichsgeräte mit wählbaren Online- und Verlaufswerten hinzufügen\ngerundete Prozentwerte für Online- und Gruppenvergleichswerte anzeigen",
+        "ru": "обновите зависимости, проверьте репозиторий и протестируйте адаптер на Node.js 26.\nдобавить домашний помощник GridVis2MQTT, приемник MQTT Discovery\nупростите настройку брокера MQTT до одного полного URL-адреса брокера\nсократить идентификаторы устройств и объектов GridVis2MQTT\nгруппируйте онлайн-объекты и исторические объекты по отдельным путям объектов\nпоместите объекты обнаружения информации об устройстве ниже информационного канала\nпредставлять значения информации об устройстве непосредственно в виде состояний под информационным каналом\nхраните нормализованную полезную нагрузку обнаружения в исходных данных каждого состояния, созданного обнаружением\nсохраните задания по обнаружению в памяти и удалите файл реестра постоянных обнаружений\nдоступность агрегированных исторических периодов в папках и устройствах измерений\nотменить синхронизацию с обнаружением запуска до истечения 10 секунд после последнего сохраненного обнаружения\nиспользуйте indicator.reachable для каждого доступного состояния\nразмещайте объекты моста Gridvis2mqtt непосредственно под информационным каналом без подключения к сети или доступных состояний\nсократите количество повторяющихся диагностик обнаружения и доступности до ведения журнала отладки, сохраняя при этом предупреждения и ошибки\nсопоставьте классы устройств Home-Assistant и классы состояний с официальными ролями IOBroker, включая роли активной/реактивной/потребленной/произведенной энергии и энергии\nраспознавайте существующие маркеры каналов, принадлежащие адаптеру, во время обновлений\nуменьшайте значение и доступность состояний сущностей и сохраняйте названия периодов в каналах периодов\nиспользуйте папки для корневых групп устройств и групп online/history и привязывайте типы объектов сущностей к запрошенной иерархии\nпоказать доступность для каждого объекта и агрегировать доступные в сети состояния соединения с устройством\nсвяжите канал каждого онлайн-объекта с его собственным доступным состоянием с помощью Common.statusStates.onlineID\nпривяжите каждый канал исторического периода к собственному доступному состоянию с помощью Common.statusStates.onlineID\nиспользуйте локализованные названия периодов истории из полезной нагрузки обнаружения для каналов периодов\nсинхронизируйте сохраненные открытия в течение 10 секунд при запуске, сохраняйте существующие значения и удаляйте объекты, на которые нет ссылок, под устройствами\nтемы доступности подписок явно, чтобы сохранить полезные нагрузки в онлайне/офлайн-режиме, обновить соответствующее состояние доступности\nинициализируйте объекты с темой доступности как недоступной до получения полезной информации о доступности; тема с обычным состоянием больше не отменяет этот статус\nдоступность журналов, подписки и оценка полезной нагрузки для диагностики подключения MQTT\nоценивайте полезную нагрузку, доступную в режиме онлайн/офлайн, независимо от шаблона значений датчика\nинтегрируйте обнаруженные устройства GridVIS с диспетчером устройств IOBroker с помощью dm-utils\nиспользуйте значки Discovery для каждого устройства и сохраняйте компактность карт Device Manager, перемещая полную информацию в подробное представление\nдобавьте постоянное переименование диспетчера устройств, вкладки с подробными сведениями фиксированного размера и упорядочение хронологической истории\nдобавить выбираемую группировку истории диспетчера устройств по измерениям или хронологии\nпоказывать заголовки периодов в хронологической истории диспетчера устройств\nотображать числовые значения детализации диспетчера устройств с двумя десятичными знаками\nдобавьте постоянные виртуальные устройства сравнения Device Manager с возможностью выбора интерактивных и исторических значений\nпоказывать округленные процентные доли для онлайн-значений и сгруппированных значений истории сравнения",
+        "pt": "atualize as dependências e teste o adaptador no Node.js 26.\nadicionar receptor GridVis2MQTT Home-Assistant\nsimplifique a configuração do broker MQTT em um URL completo\nencurte IDs de dispositivos e entidades GridVis2MQTT\nagrupe entidades on-line e históricas em caminhos separados\ncoloque entidades de detecção de dispositivos abaixo do canal\nrepresente os valores do dispositivo abaixo do canal\narmazene a carga normalizada nos dados nativos de cada estado criado pela descoberta\nmantenha as atribuições de descoberta na memória e remova o arquivo de registro\ndisponibilidade histórica agregada em pastas e dispositivos de medição\nrejeite a sincronização da descoberta inicial até 10 segundos após a última descoberta retida\nuse indicator.reachable para cada estado\ncoloque entidades de ponte GridVis2MQTT logo abaixo do canal, sem estados online ou disponíveis\nreduza os diagnósticos repetitivos de detecção e disponibilidade para depurar registros e reter avisos e erros\nmapeie classes de dispositivos e classes estaduais para funções oficiais do IOBroker, incluindo energia ativa/reativa/consumida/produzida\nreconheça marcadores de canal do adaptador durante atualizações\nreduza o valor e a disponibilidade dos estados e mantenha os nomes nos canais\nuse pastas para os grupos raiz e online/histórico do dispositivo e alinhe os tipos à hierarquia solicitada\nmostre a acessibilidade por entidade e agregue os estados online da conexão do dispositivo\nvincule cada canal de entidade online ao seu estado disponível via common.statusstates.onlineID\nvincule cada canal do período histórico ao seu estado disponível via common.statusstates.onlineID\nuse os nomes do histórico localizado da carga de descoberta para canais de período\nsincronize descobertas retidas por 10 segundos na inicialização, preserve valores e remova objetos sem referência abaixo dos dispositivos\nassine tópicos de disponibilidade de forma explícita para atualizar o estado disponível\ninicializar entidades com um tópico disponível como indisponível até que uma carga seja recebida; o tópico de estado normal não substitui mais esse status\navaliação de disponibilidade de log, assinaturas e carga útil para diagnóstico MQTT\navalie a disponibilidade on-line/offline independentemente do modelo de valor do sensor\nintegre dispositivos GridVis descobertos ao IOBroker Device Manager via dm-utils\nuse ícones Discovery por dispositivo e mantenha os cartões do Device Manager compactos para a tela de detalhes\nadicione renomeação persistente do Device Manager, guias de detalhes fixas e ordem cronológica\nagrupe o histórico selecionável do Device Manager por medida ou cronologia\nmostrar títulos de períodos no histórico do Device Manager\nexibir valores numéricos do Device Manager com duas casas decimais\nadicionar comparadores virtuais persistentes com valores online e históricos selecionáveis\nmostrar porcentagens arredondadas para comparações online e agrupadas",
+        "nl": "update de opslagplaats, controleer de afhankelijkheden en test de adapter op Node.js 26.\nGridvis2MQTT Home-Assistant MQTT Discovery-ontvanger toevoegen\nvereenvoudig de configuratie van de MQTT-makelaar tot één volledige broker-URL\napparaat- en entiteits-ID's van Gridvis2mqtt verkorten\nonline en historische entiteiten groeperen onder verschillende objectpaden\nentiteiten voor het ontdekken van apparaatinformatie onder het informatiekanaal plaatsen\nde waarden van de apparaatinformatie rechtstreeks weergeven, zoals aangegeven onder het informatiekanaal\nsla de genormaliseerde detectiebelasting op in de oorspronkelijke gegevens van elke door de ontdekking gecreëerde staat\ndetectietoewijzingen in het geheugen bewaren en het permanente detectieregisterbestand verwijderen\ngeaggregeerde beschikbaarheid uit historische perioden op meetmappen en -apparaten\ndebounce de synchronisatie van de opstartdetectie tot 10 seconden na de laatste bewaarde ontdekking\ngebruiksindicator. Bereikbaar voor elke beschikbare staat\nGridvis2MQTT bridge-entiteiten direct onder het informatiekanaal plaatsen zonder online of beschikbare staten\nbeperk de herhaalde diagnose van detecties en beschikbaarheid om de logboekregistratie te debuggen, met behoud van waarschuwingen en fouten\napparaatklassen en staatsklassen voor thuisassistenten in kaart brengen met officiële functies van IObroker, waaronder functies op het gebied van actief/reactieve/verbruikt/geproduceerd vermogen en energie\nherken bestaande kanaalmarkeringen die eigendom zijn van de adapter tijdens updates\nentiteitstoestanden beperken tot waarde en beschikbaar en periodenamen op periodekanalen behouden\nmappen gebruiken voor de root- en online/geschiedenisgroepen van apparaten en de objecttypen van entiteiten afstemmen op de gevraagde hiërarchie\ntoon de bereikbaarheid per entiteit en voeg de online beschikbare statussen voor de verbindingsstatus van het apparaat samen\nkoppel elk online entiteitskanaal aan de eigen beschikbare status via common.StatusStates.OnlineID\nkoppel elk kanaal uit de historische periode aan zijn eigen beschikbare staat via common.StatusStates.OnlineID\ngebruik de gelokaliseerde historische periodenamen uit de ontdekkingspayload voor historische kanalen\nsynchroniseer bewaarde ontdekkingen gedurende 10 seconden bij het opstarten, behoud bestaande waarden en verwijder objecten zonder referentie onder apparaten\nabonneer u expliciet op onderwerpen over beschikbaarheid, zodat online en offline payloads behouden blijven, wordt de corresponderende beschikbare status bijgewerkt\nentiteiten met een beschikbaarheidsonderwerp als onbeschikbaar initialiseren totdat een beschikbaarheidspayload is ontvangen; het normale statusonderwerp heeft niet langer voorrang op deze status\nbeschikbaarheid van logboeken, abonnementen en evaluatie van de payload voor MQTT-connectiviteitsdiagnostiek\nevalueer de beschikbaarheid van payloads online en offline onafhankelijk van het sensorwaardesjabloon\nintegreer ontdekte GridVis-apparaten met de IOBroker Device Manager via dm-utils\ngebruik Discovery-pictogrammen per apparaat en houd de Device Manager-kaarten compact door volledige informatie naar de detailweergave te verplaatsen\nvoeg permanente hernoeming van Apparaatbeheer toe, tabbladen met gegevens van vaste grootte en chronologische volgorde van de geschiedenis\nselecteerbare geschiedenis van de Device Manager toevoegen, gegroepeerd op meting of chronologie\ntijdskoppen weergeven in de chronologische geschiedenis van Device Manager\nnumerieke detailwaarden van Device Manager weergeven met twee cijfers achter de komma\nvoeg permanente virtuele Device Manager-vergelijkingsapparaten toe met selecteerbare online waarden en historische waarden\ntoon afgeronde procentuele aandelen voor online en gegroepeerde vergelijkingshistorische waarden",
+        "fr": "mettez à jour les dépendances et testez l'adaptateur sur Node.js 26.\najouter le récepteur MQTT Discovery Gridvis2MQTT Home-Assistant\nsimplifier la configuration du broker MQTT en une URL complète\nraccourcir les ID d'appareil et d'entité Gridvis2MQTT\ngrouper les entités en ligne et historiques sous des objets séparés\nplacer les entités Device Info Discovery sous le canal d'info\nreprésenter les informations de l'appareil directement sous le canal d'info\nstocker la charge utile normalisée dans les données natives de chaque état créé\ngarder les tâches de découverte en mémoire et supprimer le fichier de registre persistant\ndisponibilité historique globale sur les dossiers de mesure et les appareils\nannuler la synchronisation de la découverte au démarrage 10 secondes après la dernière découverte\nuse indicator.reachable pour chaque état disponible\nplacer les entités du pont Gridvis2MQTT directement en dessous du canal d'information, sans état en ligne ni disponible\nréduire les diagnostics répétitifs de découverte et de disponibilité tout en conservant les alertes et les erreurs\nassocier les classes d'appareils Home Assistant et les classes d'État aux rôles officiels d'IObroker, y compris les rôles actifs/réactifs/consommés/produits\nreconnaître les marqueurs de chaîne appartenant à l'adaptateur lors des mises à jour\nréduire les états des entités à la valeur et à la disponibilité et conserver les noms des périodes\nutiliser des dossiers pour les groupes root et online/history de l'appareil et aligner les types d'objets sur la hiérarchie requise\nafficher l'accessibilité par entité et agréger les états disponibles en ligne pour la connexion de l'appareil\nlier chaque chaîne d'entité en ligne à son état disponible via common.statusstates.onlineID\nlier chaque chaîne historique à son état disponible via common.statusstates.onlineID\nutiliser les noms de périodes localisés dans la charge utile de découverte pour les chaînes\nsynchronise les découvertes conservées pendant 10 secondes au démarrage, préserve les valeurs existantes et supprime les objets non référencés sous les appareils\ns'abonner aux sujets de disponibilité de manière explicite afin que les charges utiles en ligne/hors ligne mettent à jour l'état disponible\ninitialise les entités dont le sujet de disponibilité est indisponible jusqu'à ce qu'une charge utile soit reçue ; le sujet d'état normal ne remplace plus ce statut\nlog, disponibilité, abonnements et évaluation de la charge utile pour le diagnostic de connectivité MQTT\névaluer les charges utiles de disponibilité en ligne/hors ligne indépendamment du modèle de valeur du capteur\nintégrer les appareils GridVis découverts au gestionnaire de périphériques IObroker via dm-utils\nutilisez les icônes Discovery par appareil et limitez les cartes Device Manager en plaçant toutes les informations dans la vue détaillée\najouter un changement de nom permanent à Device Manager, des onglets détaillés et un ordre chronologique\najouter un historique Device Manager sélectionnable par mesure ou chronologie\nafficher les titres des périodes dans l'historique de Device Manager\nafficher les valeurs numériques de Device Manager avec deux décimales\najouter des comparateurs virtuels permanents de Device Manager avec des valeurs en ligne et historiques\nafficher les pourcentages arrondis pour les historiques de comparaison en ligne et groupés",
+        "it": "aggiorna le dipendenze e testa l'adattatore su Node.js 26.\naggiungere Gridvis2MQTT Home-Assistant MQTT Discovery\nsemplificare la configurazione MQTT con un URL completo\nabbreviare gli ID GridVis2MQTT\nraggruppa entità online e storiche in percorsi distinti\ninserire le entità Device Info Discovery sotto il canale info\nindicare i dati del dispositivo direttamente sotto il canale\nmemorizzare il payload normalizzato nei dati nativi di ogni stato creato\ntenga in memoria i compiti di rilevamento e rimuova il registro persistente\ndisponibilità storica aggregata su cartelle e dispositivi di misura\nannullare la sincronizzazione di avvio fino a 10 secondi dopo l'ultima scoperta mantenuta\nusa un indicatore. Raggiungibile per ogni stato\ninserire le entità bridge GridVis2MQTT sotto il canale info senza stati online o disponibili\nridurre la diagnostica ripetitiva di rilevamento e disponibilità per il debug e conservare avvisi ed errori\nmappare le classi di dispositivi Home-Assistant e le classi statali ai ruoli ufficiali di IObroker, tra cui energia ed energia attiva/reattiva/consumata\nriconoscere i channel marker degli adattatori durante gli aggiornamenti\nridurre gli stati d'entità a valore e disponibili e mantenere i nomi sui canali\nusa le cartelle per i gruppi root e online/history dei dispositivi e allinea i tipi di entità alla gerarchia richiesta\nmostrare la raggiungibilità per entità e aggregare gli stati di connessione online del dispositivo\ncollegare ogni canale di entità online al suo stato tramite common.statusStates.onlineID\ncollegare ogni canale storico al suo stato disponibile tramite common.statusStates.onlineID\nusa i nomi dei periodi localizzati dal Discovery Payload for period Channels\nsincronizza le scoperte per 10 secondi all'avvio, conserva i valori esistenti e rimuove gli oggetti anonimi sotto i dispositivi\nabbonarsi esplicitamente, quindi i payload online/offline mantenuti aggiornano lo stato corrispondente\ninizializza le entità con un argomento di disponibilità fino alla ricezione di un payload; lo stato normale non sostituisce più questo stato\ndisponibilità dei log, abbonamenti e analisi del payload per la diagnostica MQTT\nvaluta i payload online/offline indipendentemente dal modello di valore del sensore\nintegra i dispositivi GridVIS scoperti con IOBroker Device Manager via dm-utils\nusa le icone Discovery per dispositivo e compatte le schede Device Manager spostando tutte le informazioni nella vista dettagli\naggiungere una ridenominazione permanente di Device Manager, schede fisse e cronologia\naggiungere la cronologia selezionabile di Device Manager per misura o cronologia\nmostrare i periodi nella cronologia di Device Manager\nmostrare i dati numerici di Device Manager con due decimali\naggiungere comparatori virtuali permanenti di Device Manager con valori online e cronologici\nmostrare le quote percentuali arrotondate per i confronti online e raggruppati",
+        "es": "actualice las dependencias y compruebe el adaptador en Node.js 26.\nañadir GridVis2MQTT Home Assistant MQTT Discovery\nsimplificar la configuración del bróker de MQTT a una URL completa\nacortar ID de dispositivo y entidad de GridVis2MQTT\nagrupar entidades históricas y en línea por distintas rutas de objetos\ncoloque las entidades de detección de datos por debajo del canal\nrepresentar los valores del dispositivo como estados por debajo del canal\nalmacenar la carga útil de detección normalizada en los datos nativos de cada estado creado\nguardar las tareas de detección en la memoria y eliminar el archivo de registro persistente\ndisponibilidad total del período histórico en carpetas y dispositivos de medidas\nretrasar la sincronización del descubrimiento inicial hasta 10 segundos después del último descubrimiento retenido\nuse indicator. Accesible para cada estado disponible\ncolocar entidades puente Gridvis2MQTT justo por debajo del canal de información sin estados en línea o disponibles\nreducir los diagnósticos repetitivos de detección y disponibilidad para depurar el registro y conservar las advertencias y los errores\nasignar las clases de dispositivos de Home Assistant y las clases estatales a las funciones oficiales de ioBroker, incluidas las funciones de energía y energía activas/reactivas/consumidas\nreconocer los marcadores de canal del adaptador durante las actualizaciones\nreducir los estados de las entidades al valor y a la disponibilidad y mantener los nombres de época\nusar carpetas para los grupos raíz e historial del dispositivo y alinear los tipos de objetos de entidad con la jerarquía solicitada\nmostrar el alcance por entidad y sumar los estados disponibles en Internet del estado de conexión del dispositivo\nvincular cada canal de entidades en línea a su estado disponible a través de common.StatusStates.OnlineID\nvincular cada canal del período histórico a su estado disponible a través de common.StatusStates.OnlineID\nusar los nombres localizados del período histórico de Discovery para los canales del período\nsincronizar los descubrimientos retenidos durante 10 segundos al inicio, conservar los valores existentes y eliminar los objetos sin referencia de los dispositivos\nsuscríbase a los temas de disponibilidad de forma explícita para que las cargas útiles en línea/fuera de línea actualicen el estado disponible\ninicializar entidades con un tema de disponibilidad como no disponibles hasta que se reciba una carga útil; el tema de estado normal ya no anula este estado\ndisponibilidad de registros, suscripciones y evaluación de carga útil para el diagnóstico de conectividad de MQTT\nevaluar la disponibilidad en línea y fuera de línea independientemente de la plantilla de valores del sensor\nintegrar los dispositivos GridVIS descubiertos con el ioBroker Device Manager vía dm-utils\nutilice iconos Discovery por dispositivo y mantenga compactas las tarjetas Device Manager pasando toda la información a la vista de detalles\nañadir el cambio de nombre persistente de Device Manager, pestañas de tamaño fijo y el historial cronológico\nañadir un grupo seleccionable del historial de Device Manager por medida o cronología\nmostrar los encabezados de punto en el historial cronológico de Device Manager\nmostrar los valores numéricos detallados de Device Manager con dos decimales\nañadir dispositivos de comparación de Device Manager virtual persistente con valores de historial y de Internet seleccionables\nmostrar porcentajes redondeados del historial de comparación agrupado y en línea",
+        "pl": "zaktualizuj zależności sprawdzaj repozytorium i przetestuj adapter na Node.js 26.\ndodaj odbiornik Gridvis2MQTT Home-Assistant MQTT Discovery\nuprość konfigurację brokera MQTT do jednego pełnego adresu URL brokera\nskrócić identyfikatory urządzeń i jednostek GridVis2mqtt\ngrupuj jednostki online i historyczne poniżej oddzielnych ścieżek obiektów\numieść elementy wykrywania informacji o urządzeniu poniżej kanału informacyjnego\nreprezentuj wartości informacji o urządzeniu bezpośrednio jako stany poniżej kanału informacyjnego\nprzechowuje znormalizowany ładunek wykrywania w danych natywnych każdego stanu utworzonego przez odkrycie\nzachowaj przypisania wykrywania w pamięci i usuń plik rejestru trwałego wykrywania\nzagregowana dostępność okresu historycznego w folderach pomiarowych i urządzeniach\nobalić synchronizację wykrywania startowego do 10 sekund po ostatnim zachowanym odkryciu\nużyj indicator.reachable dla każdego dostępnego stanu\numieść elementy mostu GridVis2MQTT bezpośrednio pod kanałem informacyjnym bez stanów online lub dostępnych\nograniczyć powtarzalną diagnostykę wykrywania i dostępności w celu debugowania rejestrowania przy zachowaniu ostrzeżeń i błędów\nmapuj klasy urządzeń Home-Assistant i klasy stanowe do oficjalnych ról ioBroker, w tym ról aktywnej/reaktywnych/zużywanych/produkowanych mocy i energii\nrozpoznawanie istniejących znaczników kanałów należących do adaptera podczas aktualizacji\nzmniejszenie stanu podmiotów do wartości i dostępności oraz zachowanie nazw okresów na kanałach okresowych\nużyj folderów dla grup root i online/history urządzeń oraz wyrównuj typy obiektów encji do żądanej hierarchii\npokaż dostępność dla poszczególnych podmiotów i agreguj dostępne stany online dla statusu połączenia urządzenia\npołącz każdy kanał podmiotu online z jego własnym stanem dostępnym za pośrednictwem common.statusStates.OnlineID\npołącz każdy kanał okresu historycznego z jego własnym dostępnym stanem za pośrednictwem common.statusStates.OnlineID\nużywaj zlokalizowanych nazw okresów historii z ładunku odkrywania dla kanałów okresowych\nsynchronizuj zachowane odkrycia przez 10 sekund podczas uruchamiania, zachowaj istniejące wartości i usuwaj nieodwołane obiekty poniżej urządzeń\nsubskrybuj tematy dostępności wyraźnie, aby zachowane ładunki online/offline zaktualizowały odpowiedni stan dostępny\ninicjuj podmioty, których temat dostępności jest niedostępny, dopóki nie zostanie odebrany ładunek dostępności; temat stanu normalnego nie zastępuje już tego statusu\nrejestrowanie dostępności subskrypcji i oceny obciążenia dla diagnostyki łączności MQTT\noceniaj ładunki dostępności online/offline niezależnie od szablonu wartości czujnika\nzintegrowanie odkrytych urządzeń GridVis z Menedżerem urządzeń ioBroker za pośrednictwem dm-utils\nużywaj ikon Discovery dla każdego urządzenia i utrzymuj kompaktowe karty Menedżera urządzeń, przenosząc pełne informacje do widoku szczegółów\ndodaj trwałą zmianę nazwy Menedżera urządzeń, karty szczegółów o stałym rozmiarze i porządkowanie historii chronologicznej\ndodaj wybrane grupowanie historii Menedżera urządzeń według pomiaru lub chronologii\nwyświetlanie nagłówków okresów w chronologicznej historii Menedżera urządzeń\nwyświetla numeryczne wartości szczegółów Menedżera urządzeń z dwoma miejscami po przecinku\ndodaj trwałe wirtualne urządzenia porównujące Menedżera urządzeń z możliwymi do wyboru wartościami online i historii\npokaż zaokrąglone udziały procentowe dla wartości historii porównań online i zgrupowanych",
+        "uk": "оновити сховище-перевірте залежності та протестуйте адаптер на Node.js 26.\nдодати приймач GridVis2MQTT Домашній помічник MQTT Discovery\nспростити конфігурацію брокера MQTT до однієї повної URL-адреси брокера\nскоротити ідентифікатори пристрою та сутності GridVis2mqtt\nгрупуйте онлайн та історичні сутності під окремими шляхами об'єктів\nрозміщуйте об'єкти виявлення інформації про пристрій під інформаційним каналом\nпредставляти значення інформації про пристрій безпосередньо у вигляді станів під інформаційним каналом\nзберігати нормалізоване корисне навантаження відкриття в нативних даних кожного стану, створеного відкриттям\nзберігайте призначення виявлення в пам'яті та видаліть постійний файл реєстру виявлення\nсукупна доступність історичного періоду на папках вимірювань та пристроях\nскасувати синхронізацію відкриття запуску до 10 секунд після останнього збереженого відкриття\nвикористовувати індикатор. Доступний для кожного доступного стану\nрозміщуйте об'єкти мосту GridVis2mqtt безпосередньо під інформаційним каналом без онлайн-або доступних штатів\nзменшити повторне виявлення та діагностику доступності для налагодження журналу, зберігаючи попередження та помилки\nзіставте класи пристроїв Home-Assistant та класи штатів до офіційних ролей ioBroker, включаючи активні/реакційні/споживані/вироблену потужність та енергетичні ролі\nрозпізнавати існуючі маркери каналів, що належать адаптеру під час оновлень\nзменшити стан суб'єктів господарювання до вартості та доступності та зберегти назви періодів у каналах періодів\nвикористовувати папки для кореневих та онлайн-груп пристроїв та вирівняти типи об'єктів сутності із запитаною ієрархією\nпоказувати доступність для кожного об'єкта та об'єднати доступні в Інтернеті стани для стану підключення пристрою\nзв'язати кожен канал онлайн-суб'єкта з його власним доступним станом через common.statusstates.onlineID\nзв'язати кожен канал історичного періоду з його власним доступним станом через common.statusstates.onlineID\nвикористовувати локалізовані назви періодів історії з корисного навантаження відкриття для каналів періоду\nсинхронізувати збережені відкриття протягом 10 секунд під час запуску, збереження існуючих значень та видалення об'єктів без посилань під пристроями\nпідписатися на теми доступності явно, щоб збережені в онлайні/офлайн корисних навантаженнях оновлювали відповідний доступний стан\nініціалізувати об'єкти з темою доступності як недоступні, доки не буде отримано корисне навантаження доступності; тема звичайного стану більше не перекриває цей статус\nпідписки на доступність журналу та оцінка корисного навантаження для діагностики підключення MQTT\nоцінювати доступність в онлайні/офлайні корисних навантажень незалежно від шаблону значення датчика\nінтегрувати виявлені пристрої GridVis з диспетчером пристроїв ioBroker через dm-utils\nвикористовуйте піктограми Discovery для кожного пристрою та зберігайте компактні карти диспетчера пристроїв, переміщаючи повну інформацію до подробиць\nдодати постійне перейменування диспетчера пристроїв, вкладки деталей фіксованого розміру та впорядкування хронологічної історії\nдодати вибране групування історії диспетчера пристроїв за вимірюванням або хронологією\nпоказувати заголовки періоду в хронологічній історії диспетчера пристроїв\nвідображення числових значень деталізації диспетчера пристроїв з двома знаками після коми\nдодати постійні віртуальні пристрої порівняння диспетчера пристроїв із можливістю вибору значення в Інтернеті та історії\nпоказувати округлені відсоткові частки для онлайн-та згрупованих значень історії порівняння",
+        "zh-cn": "更新存储库检查依赖关系并在 Node.js 26 上测试适配器。\n添加 Gridvis2mqtt 家庭助手 MQTT 发现接收器\n将 MQTT 代理配置简化为一个完整的代理 URL\n缩短 Gridvis2mqtt 设备和实体 ID\n将在线和历史实体分组到单独的对象路径下\n在信息频道下方放置设备信息发现实体\n将设备信息值直接表示为信息频道下方的状态\n将标准化的发现负载存储在每个发现创建状态的原生数据中\n将发现任务保留在内存中并删除永久发现注册表文件\n汇总测量文件夹和设备上的历史时段可用性\n断开启动发现同步，直到最后一次保留的发现后 10 秒\n对所有可用状态使用 indicator.reachable\n将 Gridvis2mqtt 桥接实体直接放置在信息频道下方，不存在在线状态或可用状态\n将重复的发现和可用性诊断减少到调试日志，同时保留警告和错误\n将 Home-Assistant 设备类别和状态类别映射到官方 IOBroker 角色，包括主动/反应/消耗/产生的电量和能量角色\n更新期间识别适配器拥有的现有频道标记\n将实体状态简化为有价值且可用，并在周期频道上保留期间名称\n使用设备根目录和在线/历史记录组的文件夹，并将实体对象类型与请求的层次结构对齐\n显示每个实体的可访问性并汇总设备连接状态的在线可用状态\n通过 common.statusStates.onlineID 将每个在线实体频道链接到自己的可用状态\n通过 common.statusStates.onlineID 将每个历史时期频道链接到自己的可用状态\n使用发现载荷中的本地化历史时段名称作为时段频道\n启动时将保留的发现同步 10 秒，保留现有值，并移除设备下方未引用的对象\n明确订阅可用性主题，以便保留的在线/离线有效载荷更新相应的可用状态\n在收到可用性负载之前，将具有可用性主题的实体初始化为不可用；正常状态主题不再覆盖此状态\n针对 MQTT 连接诊断的日志可用性订阅和负载评估\n独立于传感器值模板评估在线/离线可用性有效载荷\n通过 dm-utils 将发现的 GridVis 设备与 IOBroker 设备管理器集成\n使用每台设备的 Discovery 图标，通过将完整信息移至详细信息视图来保持设备管理器卡片的紧凑性\n添加永久设备管理器重命名、固定大小的详细信息选项卡和按时间顺序排列的历史记录排序\n添加按测量或时间顺序分组的可选设备管理器历史记录\n在按时间顺序排列的设备管理器历史记录中显示时段标题\n使用小数点后两位显示设备管理器的详细数字值\n添加具有可选在线和历史值的永久虚拟设备管理器比较设备\n显示在线和分组比较历史值的四舍五入百分比份额"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
+    },
+    "titleLang": {
+      "en": "GridVis2MQTT",
+      "de": "GridVis2MQTT",
+      "ru": "ГридВис2MQTT",
+      "pt": "GridVis2MQTT",
+      "nl": "RasterVis2MQTT",
+      "fr": "GrilleVis2MQTT",
+      "it": "GridVis2MQTT",
+      "es": "GridVis2MQTT",
+      "pl": "GridVis2MQTT",
+      "uk": "GridVis2MQTT",
+      "zh-cn": "GridVis2MQTT"
+    },
+    "desc": {
+      "en": "Receives GridVis2MQTT Home Assistant MQTT discovery messages",
+      "de": "Empfängt Home-Assistant-MQTT-Discovery-Nachrichten von GridVis2MQTT",
+      "ru": "Получает сообщения MQTT Discovery Home Assistant от GridVis2MQTT",
+      "pt": "Recebe mensagens MQTT Discovery do Home Assistant do GridVis2MQTT",
+      "nl": "Ontvangt Home Assistant MQTT-discoveryberichten van GridVis2MQTT",
+      "fr": "Reçoit les messages MQTT Discovery Home Assistant de GridVis2MQTT",
+      "it": "Riceve i messaggi MQTT Discovery di Home Assistant da GridVis2MQTT",
+      "es": "Recibe mensajes MQTT Discovery de Home Assistant de GridVis2MQTT",
+      "pl": "Odbiera komunikaty MQTT Discovery Home Assistant z GridVis2MQTT",
+      "uk": "Отримує повідомлення MQTT Discovery Home Assistant від GridVis2MQTT",
+      "zh-cn": "接收来自 GridVis2MQTT 的 Home Assistant MQTT Discovery 消息"
+    },
+    "authors": [
+      "BenAhrdt <github@ben-schmidt.net>"
+    ],
+    "keywords": [
+      "gridvis janitza mqtt"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "gridvis2mqtt.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/BenAhrdt/ioBroker.gridvis2mqtt/main/admin/gridvis2mqtt.png",
+    "readme": "https://github.com/BenAhrdt/ioBroker.gridvis2mqtt/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "energy",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "supportedMessages": {
+      "deviceManager": true
+    },
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=8.0.14"
+      }
+    ]
+  },
+  "native": {
+    "enabled": true,
+    "brokerUrl": "mqtt://localhost:1883",
+    "username": "",
+    "password": "",
+    "clientId": "",
+    "keepalive": 60,
+    "qos": 0,
+    "discoveryPrefix": "homeassistant",
+    "rejectUnauthorized": true,
+    "ca": "",
+    "cert": "",
+    "key": ""
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastError",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Last error",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.messagesReceived",
+      "type": "state",
+      "common": {
+        "role": "value",
+        "name": "Messages received",
+        "type": "number",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    }
+  ]
 }

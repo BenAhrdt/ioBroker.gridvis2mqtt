@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "gridvis2mqtt",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "convert discovered iconURL images into Admin-compatible device icons while online and retain the reachability icon offline",
+        "de": "Online entdeckte IconURL-Bilder in Admin-fähige Gerätesymbole umwandeln und offline erreichen",
+        "ru": "конвертируйте обнаруженные изображения IconURL в значки устройств, совместимые с администратором, находясь в сети, и сохраняйте значок доступности в автономном режиме",
+        "pt": "converta imagens IconURL descobertas em ícones de dispositivos compatíveis com o Admin e mantenha o ícone offline",
+        "nl": "converteer ontdekte IconURL-afbeeldingen naar apparaatpictogrammen die compatibel zijn met de beheerder terwijl u online bent en bewaar het bereikbaarheidspictogram offline",
+        "fr": "convertir les images IconURL découvertes en icônes d'appareils compatibles Admin en ligne et conserver l'icône d'accessibilité hors ligne",
+        "it": "converte le immagini IconURL scoperte in icone compatibili con gli amministratori mentre sono online",
+        "es": "convertir las imágenes de IconURL descubiertas en iconos de dispositivos compatibles con el administrador y conservar el icono de acceso",
+        "pl": "konwertuj odkryte obrazy iconURL na ikony urządzeń zgodnych z administratorem w trybie online i zachowaj ikonę dostępności w trybie offline",
+        "uk": "перетворити виявлені зображення iconURL у значки пристроїв, сумісні з адміністраторами під час роботи в режимі онлайн, і зберегти піктограму доступності в автономному режимі",
+        "zh-cn": "在线时将发现的 iconURL 图像转换为与 Admin 兼容的设备图标，并在离线状态下保留可访问性图标"
+      },
       "0.1.1": {
         "en": "use the discovered iconURL state as the device icon while online and retain the Admin reachability icon offline",
         "de": "Online das erkannte IconURL-Status als Gerätesymbol verwenden und das Admin-Erreichbarkeitssymbol offline lassen",

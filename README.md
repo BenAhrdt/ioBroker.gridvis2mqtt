@@ -167,6 +167,7 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
 -->
 
 ### **WORK IN PROGRESS**
+* (BenAhrdt) update repository-check dependencies and test the adapter on Node.js 26.
 * (BenAhrdt) add GridVis2MQTT Home-Assistant MQTT Discovery receiver
 * (BenAhrdt) simplify MQTT broker configuration to one complete broker URL
 * (BenAhrdt) shorten GridVis2MQTT device and entity IDs

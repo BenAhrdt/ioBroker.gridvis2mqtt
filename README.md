@@ -16,6 +16,11 @@ Receives Home-Assistant MQTT Discovery messages published by GridVis2MQTT and mi
 
 The adapter is an MQTT Discovery receiver. It does not publish Home-Assistant Discovery configuration itself.
 
+> [!IMPORTANT]
+> **ioBroker.gridvis2mqtt is a private and independently developed open-source project and is not an official product of Janitza electronics GmbH.**
+>
+> There is no affiliation, cooperation, commission, or other association with Janitza electronics GmbH. The adapter is neither developed nor maintained, endorsed, or supported by Janitza. Use it at your own responsibility.
+
 ### Configuration
 
 Configure the MQTT broker with one complete URL, for example `mqtt://192.168.2.243:1883`. Use an `mqtts://` URL for TLS. Credentials, client ID, keepalive and QoS are supported; for TLS, configure certificate validation and optional PEM values.
@@ -64,11 +69,6 @@ The adapter translates the complete current Home-Assistant sensor `device_class`
 
 ## Developer manual
 This section is intended for the developer. It can be deleted later.
-
-### DISCLAIMER
-
-Please make sure that you consider copyrights and trademarks when you use names or logos of a company and add a disclaimer to your README.
-You can check other adapters for examples or ask in the developer community. Using a name or logo of a company without permission may cause legal problems for you.
 
 ### Getting started
 
@@ -165,6 +165,9 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (BenAhrdt) clarify the adapter's independent status and non-affiliation with Janitza electronics GmbH
+
 ### 0.1.2 (2026-10-14)
 * (BenAhrdt) convert discovered iconURL images into Admin-compatible device icons while online and retain the reachability icon offline
 
@@ -212,6 +215,16 @@ Please refer to the [`dev-server` documentation](https://github.com/ioBroker/dev
 
 - Initial implementation of the GridVis2MQTT Home-Assistant MQTT Discovery receiver.
 - The MQTT configuration uses one complete broker URL instead of duplicate URL and host/port fields.
+
+## Disclaimer
+
+ioBroker.gridvis2mqtt is a private and independently developed open-source project. It is **not an official product of Janitza electronics GmbH**. The project is neither developed nor maintained, endorsed, or supported by Janitza.
+
+The names “GridVis” and other product or company names are used solely to describe compatibility or the technical context of the software. The respective names and trademarks are the property of their respective owners.
+
+The software is provided **without warranty and at your own responsibility**. To the extent permitted by law, the author assumes no liability for damage, data loss, malfunctions, or any other consequences arising directly or indirectly from the installation or use of this software.
+
+For questions, problems, or errors related to ioBroker.gridvis2mqtt, please use the facilities of this GitHub project, such as GitHub Issues, and do not contact Janitza support.
 
 ## License
 MIT License

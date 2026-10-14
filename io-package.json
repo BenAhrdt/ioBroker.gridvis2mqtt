@@ -1,0 +1,149 @@
+{
+	"common": {
+		"name": "gridvis2mqtt",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"uk": "Початкова версія",
+				"zh-cn": "首次出版"
+			}
+		},
+		"titleLang": {
+			"en": "GridVis2MQTT",
+			"de": "GridVis2MQTT",
+			"ru": "ГридВис2MQTT",
+			"pt": "GridVis2MQTT",
+			"nl": "RasterVis2MQTT",
+			"fr": "GrilleVis2MQTT",
+			"it": "GridVis2MQTT",
+			"es": "GridVis2MQTT",
+			"pl": "GridVis2MQTT",
+			"uk": "GridVis2MQTT",
+			"zh-cn": "GridVis2MQTT"
+		},
+		"desc": {
+			"en": "Receives GridVis2MQTT Home Assistant MQTT discovery messages",
+			"de": "Empfängt Home-Assistant-MQTT-Discovery-Nachrichten von GridVis2MQTT",
+			"ru": "Получает сообщения MQTT Discovery Home Assistant от GridVis2MQTT",
+			"pt": "Recebe mensagens MQTT Discovery do Home Assistant do GridVis2MQTT",
+			"nl": "Ontvangt Home Assistant MQTT-discoveryberichten van GridVis2MQTT",
+			"fr": "Reçoit les messages MQTT Discovery Home Assistant de GridVis2MQTT",
+			"it": "Riceve i messaggi MQTT Discovery di Home Assistant da GridVis2MQTT",
+			"es": "Recibe mensajes MQTT Discovery de Home Assistant de GridVis2MQTT",
+			"pl": "Odbiera komunikaty MQTT Discovery Home Assistant z GridVis2MQTT",
+			"uk": "Отримує повідомлення MQTT Discovery Home Assistant від GridVis2MQTT",
+			"zh-cn": "接收来自 GridVis2MQTT 的 Home Assistant MQTT Discovery 消息"
+		},
+		"authors": [
+			"BenAhrdt <github@ben-schmidt.net>"
+		],
+		"keywords": [
+			"gridvis janitza mqtt"
+		],
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "gridvis2mqtt.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/BenAhrdt/ioBroker.gridvis2mqtt/main/admin/gridvis2mqtt.png",
+		"readme": "https://github.com/BenAhrdt/ioBroker.gridvis2mqtt/blob/main/README.md",
+		"loglevel": "info",
+		"tier": 3,
+		"mode": "daemon",
+		"type": "energy",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "push",
+		"supportedMessages": {
+			"deviceManager": true
+		},
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=6.0.11"
+			}
+		],
+	"globalDependencies": [
+		{
+			"admin": ">=8.0.14"
+		}
+	]
+	},
+	"native": {
+		"enabled": true,
+		"brokerUrl": "mqtt://localhost:1883",
+		"username": "",
+		"password": "",
+		"clientId": "",
+		"keepalive": 60,
+		"qos": 0,
+		"discoveryPrefix": "homeassistant",
+		"rejectUnauthorized": true,
+		"ca": "",
+		"cert": "",
+		"key": ""
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.lastError",
+			"type": "state",
+			"common": {
+				"role": "text",
+				"name": "Last error",
+				"type": "string",
+				"read": true,
+				"write": false,
+				"def": ""
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.messagesReceived",
+			"type": "state",
+			"common": {
+				"role": "value",
+				"name": "Messages received",
+				"type": "number",
+				"read": true,
+				"write": false,
+				"def": 0
+			},
+			"native": {}
+		}
+	]
+}

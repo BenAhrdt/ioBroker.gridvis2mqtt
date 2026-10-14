@@ -1,0 +1,169 @@
+{
+	"i18n": true,
+	"type": "panel",
+	"items": {
+		"enabled": {
+			"type": "checkbox",
+			"label": "Enabled",
+			"default": true,
+			"newLine": true,
+			"xs": 12,
+			"sm": 6,
+			"md": 4,
+			"lg": 3,
+			"xl": 3
+		},
+		"brokerHeader": {
+			"type": "header",
+			"text": "MQTT broker",
+			"size": 2,
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		},
+		"brokerUrl": {
+			"type": "text",
+			"label": "Broker URL",
+			"help": "Complete URL, for example mqtt://192.168.2.243:1883. Use mqtts:// for TLS.",
+			"default": "mqtt://localhost:1883",
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		},
+		"username": {
+			"type": "text",
+			"label": "Username",
+			"default": "",
+			"newLine": true,
+			"xs": 12,
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"xl": 6
+		},
+		"password": {
+			"type": "password",
+			"label": "Password",
+			"default": "",
+			"newLine": false,
+			"xs": 12,
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"xl": 6
+		},
+		"clientId": {
+			"type": "text",
+			"label": "Client ID",
+			"default": "",
+			"newLine": true,
+			"xs": 12,
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"xl": 6
+		},
+		"keepalive": {
+			"type": "number",
+			"label": "Keepalive (seconds)",
+			"default": 60,
+			"min": 15,
+			"max": 3600,
+			"newLine": false,
+			"xs": 12,
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"xl": 6
+		},
+		"qos": {
+			"type": "select",
+			"label": "MQTT QoS",
+			"options": [
+				{ "label": "0 - at most once", "value": 0 },
+				{ "label": "1 - at least once", "value": 1 },
+				{ "label": "2 - exactly once", "value": 2 }
+			],
+			"default": 0,
+			"newLine": true,
+			"xs": 12,
+			"sm": 6,
+			"md": 4,
+			"lg": 4,
+			"xl": 4
+		},
+		"discoveryPrefix": {
+			"type": "text",
+			"label": "Home Assistant discovery prefix",
+			"help": "Use the same prefix as GridVis2MQTT. You may enter homeassistant or homeassistant/#.",
+			"default": "homeassistant",
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 8,
+			"lg": 8,
+			"xl": 8
+		},
+		"tlsHeader": {
+			"type": "header",
+			"text": "TLS",
+			"size": 2,
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		},
+		"rejectUnauthorized": {
+			"type": "checkbox",
+			"label": "Validate TLS certificate",
+			"default": true,
+			"newLine": true,
+			"xs": 12,
+			"sm": 6,
+			"md": 6,
+			"lg": 6,
+			"xl": 6
+		},
+		"ca": {
+			"type": "text",
+			"label": "CA certificate (PEM)",
+			"default": "",
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		},
+		"cert": {
+			"type": "text",
+			"label": "Client certificate (PEM)",
+			"default": "",
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		},
+		"key": {
+			"type": "password",
+			"label": "Client private key (PEM)",
+			"default": "",
+			"newLine": true,
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
+		}
+	}
+}
